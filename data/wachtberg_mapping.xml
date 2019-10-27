@@ -1,0 +1,16 @@
+<mapping>
+   <class id = "1"/>
+   <class id = "2"/>
+   <class id = "8"/>
+   <class id = "13"/>
+   <class id = "14"/>
+  <!-- map classes -->
+  <map from="7"  to="2"/>
+  <map from="11"  to="2"/>
+  <map from="16"  to="8"/>
+  <map from="17"  to="8"/>
+  <map from="6"  to="13"/>
+  <map from="3"  to="14"/>
+  <map from="15"  to="14"/>
+  <map from="12" to="2"/>
+</mapping>

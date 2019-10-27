@@ -1,0 +1,50 @@
+Folds used with the Wachtberg dataset in [1]
+
+Description: We provide here the Wachtberg Dataset used in [1]. 
+Also included is the used mapping form original classes to 
+relevant classes. The dataset was recorded with a Velodyne HDL-64 SE
+mounted on a car and the pose of the car was estimated with an IMU.
+
+The format of the files is the same as used in the Freiburg 360 dataset:
+
+scan_i_robotPoses.dat contains the positions of the robot according to a IMU.
+The poses are given as 3D position and Euler angles in the order 
+x, y, z, roll, pitch, yaw.
+
+scan_i_points.dat contains the laser range points in the robot coordinate system
+and the position of the sensor from which this point was measured.
+The order is sensorPosX, sensorPosY, sensorPosZ, pointX, pointY, pointZ.
+
+scan_i_labels.dat contains the labeling of a scan, where the order of the labels is the 
+same as in the point data. Every line contains a label of the respective point.
+
+The labels have the following encoding: 0 = no label, 1 = car, 2 = ground, 
+3 = vegetation, 4 = people, 5 = sign, 6 = tree trunk, 7 = sidewalk, 
+8 = facade, 9 = parking area, 10 = lane marking, 11 = lawn, 12 = curb, 
+13 = pole, 14 = foliage, 15 = shrub, 16 = window, 17 = door, 18 = roof, 
+19 = bicycle, 20 = stairs.
+
+The labels used in [1] have the following encoding: 2 = ground,
+8 = facade, 13 = pole, 1 = vehicle, 14 = vegetation.
+
+The file 'wachtberg_mapping.xml' contains the relevant labels and the mapping
+from one to another class. The rest of the classes are simply ignored in
+the evaluation.
+
+Licence: The scans and labels are distributed under under a Creative Commons 
+Attribution-Noncommercial-Share Alike 3.0 Unported License
+You are free to copy, distribute and transmit the work. Furthermore you are 
+allowed to adopt the work. You must attribute the work in the manner specified
+by the author or licensor (but not in any way that suggest that they endorse 
+you or your use of the work). You may not use this work for commercial 
+purposes. If you alter, transform, or build upon this work, you may distribute
+the work only under the same or similar licence to this one.
+
+The datasets are distributed WITHOUT ANY WARRANTY; without even the implied 
+warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+Contact: If you have a question relating to the evaluation you can contact me via
+behley@iai.uni-bonn.de.
+
+[1] J. Behley, V. Steinhage, A.B. Cremers. Performance of Histogram Descriptors
+for the Classification of 3D Laser Range Data in Urban Environments, ICRA, 2012.
