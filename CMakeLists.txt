@@ -30,7 +30,6 @@ INCLUDE_DIRECTORIES(
 
 pybind11_add_module(${PROJECT_NAME}
     src/keypoints.cpp
-    ${MY_HEADERS}
 )
 target_link_libraries(${PROJECT_NAME}
     ${PCL_LIBRARIES}
