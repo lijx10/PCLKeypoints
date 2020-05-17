@@ -16,6 +16,7 @@
 
 #include <pcl/keypoints/iss_3d.h>
 #include <pcl/keypoints/harris_3d.h>
+#include <pcl/keypoints/harris_6d.h>
 #include <pcl/keypoints/sift_keypoint.h>
 
 #include <pcl/point_types.h>
@@ -43,6 +44,28 @@ typename pcl::PointCloud<T>::Ptr eigen2p_pcl(const Eigen::MatrixXf points){
         p_pc->points[i].x = pt[0];
         p_pc->points[i].y = pt[1];
         p_pc->points[i].z = pt[2];
+    }
+
+    return p_pc;
+}
+
+template <typename T>
+typename pcl::PointCloud<T>::Ptr eigen2p_pclxyzrgb(const Eigen::MatrixXf points){
+    typename pcl::PointCloud<T>::Ptr p_pc(new typename pcl::PointCloud<T>());
+    // Fill in the model cloud
+    p_pc->width    = points.rows();
+    p_pc->height   = 1;
+    p_pc->is_dense = true;
+    p_pc->points.resize (p_pc->width * p_pc->height);
+
+    for (size_t i = 0; i < p_pc->points.size(); ++i){
+        Eigen::VectorXf pt = points.row(i);
+        p_pc->points[i].x = pt[0];
+        p_pc->points[i].y = pt[1];
+        p_pc->points[i].z = pt[2];
+        p_pc->points[i].r = pt[3];
+        p_pc->points[i].g = pt[4];
+        p_pc->points[i].b = pt[5];
     }
 
     return p_pc;
@@ -127,10 +150,19 @@ Eigen::MatrixXf keypointIss(const Eigen::MatrixXf points,
                             const int iss_min_neighbors=5,
                             const int threads=0);
 
-Eigen::MatrixXf keypointHarris(const Eigen::MatrixXf points,
+Eigen::MatrixXf keypointHarris3D(const Eigen::MatrixXf points,
                                const float radius=0.5,
                                const float nms_threshold=1e-3,
-                               const int threads=0);
+                               const int threads=0,
+                               const bool is_nms=false,
+                               const bool is_refine=false);
+
+Eigen::MatrixXf keypointHarris6D(const Eigen::MatrixXf points,
+                               const float radius=0.5,
+                               const float nms_threshold=1e-3,
+                               const int threads=0,
+                               const bool is_nms=false,
+                               const bool is_refine=false);
 
 namespace pcl
 {

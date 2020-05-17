@@ -35,19 +35,44 @@ Eigen::MatrixXf keypointIss(const Eigen::MatrixXf points,
 }
 
 
-Eigen::MatrixXf keypointHarris(const Eigen::MatrixXf points,
+Eigen::MatrixXf keypointHarris3D(const Eigen::MatrixXf points,
                                const float radius,
                                const float nms_threshold,
-                               const int threads){
+                               const int threads,
+                               const bool is_nms,
+                               const bool is_refine){
     pcl::PointCloud<pcl::PointXYZ>::Ptr p_pc = eigen2p_pcl<pcl::PointXYZ>(points);
 
     pcl::PointCloud<pcl::PointXYZI>::Ptr p_keypoints (new pcl::PointCloud<pcl::PointXYZI> ());
     pcl::HarrisKeypoint3D<pcl::PointXYZ, pcl::PointXYZI> harris_detector;
 
     harris_detector.setMethod(pcl::HarrisKeypoint3D<pcl::PointXYZ, pcl::PointXYZI>::HARRIS);
-    harris_detector.setNonMaxSupression (true);
+    harris_detector.setNonMaxSupression (is_nms);
     harris_detector.setRadius(radius);
-    harris_detector.setRefine(true);
+    harris_detector.setRefine(is_refine);
+    harris_detector.setThreshold(nms_threshold);
+    harris_detector.setNumberOfThreads(threads);
+    harris_detector.setInputCloud(p_pc);
+    harris_detector.compute(*p_keypoints);
+
+    return p_pcl2eigen<pcl::PointXYZI>(p_keypoints);
+}
+
+
+Eigen::MatrixXf keypointHarris6D(const Eigen::MatrixXf points,
+                               const float radius,
+                               const float nms_threshold,
+                               const int threads,
+                               const bool is_nms,
+                               const bool is_refine){
+    pcl::PointCloud<pcl::PointXYZRGB>::Ptr p_pc = eigen2p_pclxyzrgb<pcl::PointXYZRGB>(points);
+
+    pcl::PointCloud<pcl::PointXYZI>::Ptr p_keypoints (new pcl::PointCloud<pcl::PointXYZI> ());
+    pcl::HarrisKeypoint6D<pcl::PointXYZRGB, pcl::PointXYZI> harris_detector;
+
+    harris_detector.setNonMaxSupression (is_nms);
+    harris_detector.setRadius(radius);
+    harris_detector.setRefine(is_refine);
     harris_detector.setThreshold(nms_threshold);
     harris_detector.setNumberOfThreads(threads);
     harris_detector.setInputCloud(p_pc);
@@ -223,11 +248,20 @@ PYBIND11_MODULE(PCLKeypoint, m) {
           py::arg("iss_gamma_32")=0.975f,
           py::arg("iss_min_neighbors")=5,
           py::arg("threads")=0);
-    m.def("keypointHarris", &keypointHarris,
+    m.def("keypointHarris3D", &keypointHarris3D,
           py::arg("points"),
           py::arg("radius")=0.5f,
           py::arg("nms_threshold")=0.001f,
-          py::arg("threads")=0);
+          py::arg("threads")=0,
+          py::arg("is_nms")=false,
+          py::arg("is_refine")=false);
+    m.def("keypointHarris6D", &keypointHarris6D,
+          py::arg("points"),
+          py::arg("radius")=0.5f,
+          py::arg("nms_threshold")=0.001f,
+          py::arg("threads")=0,
+          py::arg("is_nms")=false,
+          py::arg("is_refine")=false);
     m.def("keypointSift", &keypointSift,
           py::arg("points"),
           py::arg("min_scale")=0.1f,
